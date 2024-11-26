@@ -42,9 +42,16 @@ def generate_launch_description():
             description="IP address by which the robot can be reached.",
         )
     )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "receive_timeout",
+            description="Timeout after which a call to the dashboard server will be considered failure if no answer has been received.",
+        )
+    )
 
     # Initialize Arguments
     robot_ip = LaunchConfiguration("robot_ip")
+    receive_timeout = LaunchConfiguration("receive_timeout")
 
     dashboard_client_node = Node(
         package="ur_robot_driver",
@@ -52,7 +59,8 @@ def generate_launch_description():
         name="dashboard_client",
         output="screen",
         emulate_tty=True,
-        parameters=[{"robot_ip": robot_ip}],
+        parameters=[{"robot_ip": robot_ip,
+                     "receive_timeout": receive_timeout}],
     )
 
     return LaunchDescription(declared_arguments + [dashboard_client_node])
